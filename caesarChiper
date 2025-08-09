@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <title>Kata Sandi</title>
+</head>
+<body>
+  <form onsubmit="event.preventDefault(); cekPassword();">
+    <input type="password" id="pw" placeholder="Kata Sandi">
+    <button type="submit">Masuk</button>
+  </form>
+
+  <script>
+    function cekPassword() {
+      var pw = document.getElementById("pw").value;
+      if (pw === "GSSP") {
+        alert("CORRECT!");
+      } else {
+        alert("!");
+      }
+    }
+  </script>
+</body>
+</html>
